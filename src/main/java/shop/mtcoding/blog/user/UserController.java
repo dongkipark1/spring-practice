@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
 
     @PostMapping("/join")
-    public String join(){
-
+    public String join(UserRequest.joinDTO requestDTO){
+        System.out.println(requestDTO);
         return "redirect:/loginForm";
     }
 
