@@ -3,6 +3,8 @@ server:
     encoding:
       charset: utf-8
       force: true
+    session:
+      timeout: 30m
   port: 8080
 # yml에 테이블 설정 한다
   spring:
