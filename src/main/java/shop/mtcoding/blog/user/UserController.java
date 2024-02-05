@@ -33,6 +33,11 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO requestDTO){
+        System.out.println(requestDTO); // toString -> @Data
+
+        if (requestDTO.getUsername().length() < 3){
+            return "error/400"; // viewResolver 설정이 되어 있음.
+        }
         return null;
     }
 
