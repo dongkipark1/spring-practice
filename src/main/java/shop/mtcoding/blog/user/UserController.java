@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,29 @@ public class UserController {
 
     // 자바의 final 변수는 반드시 초기화가 되어야 한다.
     private final UserRepository userRepository;
+
+    // 방법 1
+//    @PostMapping("/login")
+//    public String login(String username, String password){
+//        return null;
+//    }
+
+    // 방법 2
+//    public String login(HttpServletRequest request){
+//        String username = request.getParameter("username");
+//        String password = request.getParameter("password");
+//        return null;
+//    }
+    // 왜 조회인다 Get이 아닌 Post인가? 민감한 정보는 body로 보낸다.
+    // 로그인만 예외롤 select이지만 post 사용
+    // select * from user_tb where username=? and password = ?
+
+    // 방법 3
+
+    @PostMapping("/login")
+    public String login(UserRequest.LoginDTO requestDTO){
+        return null;
+    }
 
     @PostMapping("/join")
     public String join(UserRequest.joinDTO requestDTO){
