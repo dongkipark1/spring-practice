@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -26,8 +27,11 @@ public class BoardController {
         return "board/saveForm";
     }
 
-    @GetMapping("/board/1")
-    public String detail() {
+    // URL에 테이블 명 뒤에 들어오는 값은 PK or UK
+    // 나머지는 다 queryString
+    @GetMapping("/board/{id}")
+    public String detail(@PathVariable int id) {
+        System.out.println("id: " + id);
         return "board/detail";
     }
 }
