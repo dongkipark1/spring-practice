@@ -30,8 +30,13 @@ public class BoardController {
     // URL에 테이블 명 뒤에 들어오는 값은 PK or UK
     // 나머지는 다 queryString
     @GetMapping("/board/{id}")
-    public String detail(@PathVariable int id) {
+    public String detail(@PathVariable int id , HttpServletRequest request) {
         System.out.println("id: " + id);
+
+        // 바디 데이터가 없으면 유효성 검사가 필요없지 ㅎㅎㅎ
+        BoardResponse.DetailDTO responseDTO = boardRepostiory.findById(id);
+
+        request.setAttribute("board", responseDTO);
         return "board/detail";
     }
 }
