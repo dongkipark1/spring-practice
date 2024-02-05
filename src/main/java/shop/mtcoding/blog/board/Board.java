@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Table
+@Table(name = "board_tb")
 @Data
 @Entity // 테이블 생성 위해 필요한 어노테이션
 public class Board {
