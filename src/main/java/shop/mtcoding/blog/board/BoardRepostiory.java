@@ -18,7 +18,7 @@ public class BoardRepostiory {
     }
 
     public BoardResponse.DetailDTO findById(int idx){
-      Query query = em.createNativeQuery("select * b.id, b.title, b.content, b.user_id, u.username from board_tb b inner join user_tb u on b.user_id = u.id where b.id = ?");
+      Query query = em.createNativeQuery("select b.id, b.title, b.content, b.user_id, u.username from board_tb b inner join user_tb u on b.user_id = u.id where b.id = ?");
       query.setParameter(1, idx);
 
       Object[] row = (Object[]) query.getSingleResult();
