@@ -1,17 +1,19 @@
 package shop.mtcoding.blog.user;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor // final이 붙은 애들에 대한 생성자
 @Controller
 public class UserController {
 
     // 자바의 final 변수는 반드시 초기화가 되어야 한다.
     private final UserRepository userRepository;
+    private final HttpSession session;
 
     // 방법 1
 //    @PostMapping("/login")
@@ -32,13 +34,23 @@ public class UserController {
     // 방법 3
 
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO requestDTO){
+    public String login(UserRequest.LoginDTO requestDTO, HttpServletRequest request){
+        HttpSession s = request.getSession();
+
         System.out.println(requestDTO); // toString -> @Data
 
         if (requestDTO.getUsername().length() < 3){
             return "error/400"; // viewResolver 설정이 되어 있음.
         }
-        return null;
+
+        User user = userRepository.findByUsernameAndPassword(requestDTO);
+
+        if (user == null) { // 조회안됨
+            return "error/401";
+        }else { //조회 됨 (인증완료)
+            session.setAttribute("sessionUser", user); //라커에 담는다 (stateful)
+        }
+        return "redirect:/"; // 컨트롤러가 존재하면 무조건 redirect다 반드시 외울 것!!!
     }
 
     @PostMapping("/join")
