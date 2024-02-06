@@ -70,12 +70,36 @@ public class BoardController {
     // 나머지는 다 queryString
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id , HttpServletRequest request) {
-        System.out.println("id: " + id);
-
-        // 바디 데이터가 없으면 유효성 검사가 필요없지 ㅎㅎㅎ
+        // 1. 모델 진입 - 상세보기 데이터 가져오기
         BoardResponse.DetailDTO responseDTO = boardRepostiory.findById(id);
 
+        // 2. 페이지 주인 여부 체크 (board의 userId와 sessionUser의 id를 비교)
+
+        User sessionUser = (User) session.getAttribute("sessionUser"); // 열려라 참깨
+        int boardUserId = responseDTO.getUserId(); // board의 user id
+        // int boardUserId = 게시글작성자번호
+
+        boolean pageOwner = false; // 게시글작성자번호 == 로그인한사람의 번호;
+
+        if (sessionUser != null){
+            if (boardUserId == sessionUser.getId()){
+               pageOwner = true;
+            }
+        }
+
+//        방법 2
+//        boolean pageOwner;
+//        if(sessionUser == null){
+//            pageOwner = false;
+//        }else{
+//            int 게시글작성자번호 = responseDTO.getUserId();
+//            int 로그인한사람의번호 = sessionUser.getId();
+//            pageOwner = 게시글작성자번호 == 로그인한사람의번호;
+//        }
+
+
         request.setAttribute("board", responseDTO);
+        request.setAttribute("pageOwner", pageOwner);
         return "board/detail";
     }
 }
