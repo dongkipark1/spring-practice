@@ -18,6 +18,29 @@ public class BoardController {
     private final HttpSession session;
     private final BoardRepostiory boardRepostiory;
 
+    @PostMapping("/board/{id}/delete")
+    public String delete(@PathVariable int id, HttpServletRequest request){
+        // 1. 인증 안되면 나가세요
+
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null){ // error 401
+            return "redirect:/loginForm";
+        }
+
+        // 2. 권한 없으면 나가세요
+        Board board = boardRepostiory.findById(id);
+        if (board.getUserId() != sessionUser.getId()){
+            request.setAttribute("status", 403);
+            request.setAttribute("msg", "게시글 삭제 권한이 없습니다");
+            return "error/40x";
+        }
+
+        boardRepostiory.deleteById(id);
+
+        return "redirect:/";
+
+    }// 바디 데이터가 없기 때문에 유효성 검사 x 인증 체크는 해줘야한다.
+
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request){ //DTO 만들어야 한다
         // 1. 인증 체크 인증 안되면 리다이렉션으로 로그인페이지로 보내야
@@ -71,7 +94,7 @@ public class BoardController {
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id , HttpServletRequest request) {
         // 1. 모델 진입 - 상세보기 데이터 가져오기
-        BoardResponse.DetailDTO responseDTO = boardRepostiory.findById(id);
+        BoardResponse.DetailDTO responseDTO = boardRepostiory.findByIdWithUser(id);
 
         // 2. 페이지 주인 여부 체크 (board의 userId와 sessionUser의 id를 비교)
 

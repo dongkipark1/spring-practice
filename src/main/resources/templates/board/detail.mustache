@@ -5,7 +5,12 @@
         <!-- 수정삭제버튼 -->
         <div class="d-flex justify-content-end">
             <button class="btn btn-warning me-1">수정</button>
-            <button class="btn btn-danger">삭제</button>
+            <form action="/board/{{board.id}} /delete " method="post">
+                <button class="btn btn-danger">삭제</button>
+            </form>
+<!--     form태그의 기본은 submit       -->
+<!--            input 태그는 전송할 게 없어서 적지 않는다 -->
+
         </div>
     {{/pageOwner}}
 
