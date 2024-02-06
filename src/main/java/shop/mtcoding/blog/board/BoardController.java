@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import shop.mtcoding.blog.user.User;
 
 import java.util.List;
@@ -16,6 +17,31 @@ public class BoardController {
 
     private final HttpSession session;
     private final BoardRepostiory boardRepostiory;
+
+    @PostMapping("/board/save")
+    public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request){ //DTO 만들어야 한다
+        // 1. 인증 체크 인증 안되면 리다이렉션으로 로그인페이지로 보내야
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null){
+            return "redirect:/loginForm";
+        }
+
+        // 2. 바디 데이터 확인 및 유효성 검사
+        System.out.println(requestDTO);
+
+        if (requestDTO.getTitle().length() > 30){
+            request.setAttribute("status", 400);
+            request.setAttribute("msg", "타이틀의 길이가 30자를 초과해서는 아니되오!");
+            return "error/40x"; // BadRequest
+        }
+
+        // 3. 모델 위임
+        // insert into board_tb(title, content, user_id, created_at) values(?,?,?,now()); title과 content를 request userId는 제이세션아이디의 user 객체에서 가지고 오면된
+        boardRepostiory.save(requestDTO, sessionUser.getId());
+
+        return "redirect:/";
+    }
+
     @GetMapping({ "/", "/board" })
     public String index(HttpServletRequest request) {
 

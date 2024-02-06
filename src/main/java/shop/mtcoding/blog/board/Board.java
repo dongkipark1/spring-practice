@@ -12,6 +12,8 @@ public class Board {
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private int id;
+
+    @Column(length = 30) // 30자 제한
     private String title;
     private String content;
 
