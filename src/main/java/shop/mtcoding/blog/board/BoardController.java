@@ -18,6 +18,30 @@ public class BoardController {
     private final HttpSession session;
     private final BoardRepostiory boardRepostiory;
 
+    // updateForm의 책임
+    @GetMapping("/board/{id}/updateForm")
+    public String updateForm(@PathVariable int id, HttpServletRequest request){
+
+        // 인증 체크 (로그인 안하면 못들어와!)
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null){
+            return "redirect:/loginForm";
+        }
+
+        // 모델 위임 (id로 board를 조회 핵심로직)
+        Board board = boardRepostiory.findById(1);
+
+        // 권한 체크 (로그인한 id와 게시글을 쓴 user를 비교)
+        if (board.getUserId() != sessionUser.getId()){
+            return "error/403";
+        }
+
+        // 3. 가방에 담기(핵심로직)
+        request.setAttribute("board", board);
+
+        return "board/updateForm";
+    }
+
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable int id, HttpServletRequest request){
         // 1. 인증 안되면 나가세요
