@@ -29,7 +29,7 @@ public class BoardController {
         }
 
         // 모델 위임 (id로 board를 조회 핵심로직)
-        Board board = boardRepostiory.findById(1);
+        Board board = boardRepostiory.findById(id);
 
         // 권한 체크 (로그인한 id와 게시글을 쓴 user를 비교)
         if (board.getUserId() != sessionUser.getId()){
