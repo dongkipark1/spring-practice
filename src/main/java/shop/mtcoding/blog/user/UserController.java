@@ -33,25 +33,25 @@ public class UserController {
 
     // 방법 3
 
-    @PostMapping("/login")
-    public String login(UserRequest.LoginDTO requestDTO, HttpServletRequest request){
-        HttpSession s = request.getSession();
-
-        System.out.println(requestDTO); // toString -> @Data
-
-        if (requestDTO.getUsername().length() < 3){
-            return "error/400"; // viewResolver 설정이 되어 있음.
-        }
-
-        User user = userRepository.findByUsernameAndPassword(requestDTO);
-
-        if (user == null) { // 조회안됨
-            return "error/401";
-        }else { //조회 됨 (인증완료)
-            session.setAttribute("sessionUser", user); //라커에 담는다 (stateful)
-        }
-        return "redirect:/"; // 컨트롤러가 존재하면 무조건 redirect다 반드시 외울 것!!!
-    }
+//    @PostMapping("/login")
+//    public String login(UserRequest.LoginDTO requestDTO, HttpServletRequest request){
+//        HttpSession s = request.getSession();
+//
+//        System.out.println(requestDTO); // toString -> @Data
+//
+//        if (requestDTO.getUsername().length() < 3){
+//            return "error/400"; // viewResolver 설정이 되어 있음.
+//        }
+//
+//        User user = userRepository.findByUsernameAndPassword(requestDTO);
+//
+//        if (user == null) { // 조회안됨
+//            return "error/401";
+//        }else { //조회 됨 (인증완료)
+//            session.setAttribute("sessionUser", user); //라커에 담는다 (stateful)
+//        }
+//        return "redirect:/"; // 컨트롤러가 존재하면 무조건 redirect다 반드시 외울 것!!!
+//    }
 
     @PostMapping("/join")
     public String join(UserRequest.joinDTO requestDTO){
