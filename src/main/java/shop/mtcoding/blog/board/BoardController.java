@@ -27,9 +27,7 @@ public class BoardController {
 
         // 1. 인증 체크(부가 로직)
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            return "redirect:/loginForm";
-        }
+
         // 조금이라도 다르면 패턴화 시켜야 함
 
         // 2. 권한 체크(부가 로직)
