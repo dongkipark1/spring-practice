@@ -153,25 +153,25 @@ public class BoardController {
 
         User sessionUser = (User) session.getAttribute("sessionUser"); // 열려라 참깨
         int boardUserId = responseDTO.getUserId(); // board의 user id
-        // int boardUserId = 게시글작성자번호
+//         int boardUserId = 게시글작성자번호;
+//
+//        boolean pageOwner = false; // 게시글작성자번호 == 로그인한사람의 번호;
 
-        boolean pageOwner = false; // 게시글작성자번호 == 로그인한사람의 번호;
-
-        if (sessionUser != null) {
-            if (boardUserId == sessionUser.getId()) {
-                pageOwner = true;
-            }
-        }
+//        if (sessionUser != null) {
+//            if (boardUserId == sessionUser.getId()) {
+//                pageOwner = true;
+//            }
+//        }
 
 //        방법 2
-//        boolean pageOwner;
-//        if(sessionUser == null){
-//            pageOwner = false;
-//        }else{
-//            int 게시글작성자번호 = responseDTO.getUserId();
-//            int 로그인한사람의번호 = sessionUser.getId();
-//            pageOwner = 게시글작성자번호 == 로그인한사람의번호;
-//        }
+        boolean pageOwner;
+        if(sessionUser == null){
+            pageOwner = false;
+        }else{
+            int 게시글작성자번호 = responseDTO.getUserId();
+            int 로그인한사람의번호 = sessionUser.getId();
+            pageOwner = 게시글작성자번호 == 로그인한사람의번호;
+        }
 
 
         request.setAttribute("board", responseDTO);
