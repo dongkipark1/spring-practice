@@ -2,9 +2,30 @@ package shop.mtcoding.blog.board;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.Data;
+import org.springframework.web.bind.annotation.PathVariable;
 import shop.mtcoding.blog.user.User;
 
 public class BoardResponse {
+
+    @Data
+    public static class BoardDTO{
+        private Integer id;
+        private String title;
+        private Boolean first;
+        private Boolean last;
+        private Integer prev;
+        private Integer next;
+
+        public BoardDTO(Integer id, String title, Boolean first, Boolean last, Integer prev, Integer next) {
+            this.id = id;
+            this.title = title;
+            this.first = first;
+            this.last = last;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
     @Data
     public static class DetailDTO{
         // FLAT한 데이터

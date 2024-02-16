@@ -4,10 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog.reply.ReplyRepostiory;
 import shop.mtcoding.blog.user.User;
 
@@ -119,11 +116,26 @@ public class BoardController {
         return "redirect:/";
     }
 
+    //localhost:8080?page=1 -> page 값이 1
+    //localhost:8080 -> page 값이 0
     @GetMapping({"/", "/board"})
-    public String index(HttpServletRequest request) {
+    public String index(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") Integer page) {
 
-        List<Board> boardList = boardRepostiory.findAll();
+        List<Board> boardList = boardRepostiory.findAll(page);
+
+        // 전체 페이지 개수
+        int count =boardRepostiory.count().intValue();
+        // if 페이지 개수가 6 - > 2page
+        // if 페이지 개수가 7 - > 3page
+        // int allPageCount = count / 3;
+        int namerge = count % 3 == 0 ? 0 : 1;
+        int allPageCount = count / 3 + namerge;
+
         request.setAttribute("boardList", boardList);
+        request.setAttribute("first", page==0);
+        request.setAttribute("last", allPageCount == page+1);
+        request.setAttribute("prev", page-1);
+        request.setAttribute("next", page+1);
 
         return "index";
     }
