@@ -5,6 +5,13 @@ insert into board_tb(title, content, user_id, created_at) values ('제목1', '�
 insert into board_tb(title, content, user_id, created_at) values ('제목2', '내용2', 1, now());
 insert into board_tb(title, content, user_id, created_at) values ('제목3', '내용3', 1, now());
 insert into board_tb(title, content, user_id, created_at) values ('제목4', '내용4', 2, now());
+insert into board_tb(title, content, user_id, created_at) values ('title5', '내용5', 2, now());
+insert into board_tb(title, content, user_id, created_at) values ('title6', '내용6', 2, now());
+insert into board_tb(title, content, user_id, created_at) values ('title7', '내용7', 2, now());
+insert into board_tb(title, content, user_id, created_at) values ('title8', '내용8', 2, now());
+insert into board_tb(title, content, user_id, created_at) values ('title9', '내용9', 2, now());
+insert into board_tb(title, content, user_id, created_at) values ('title10', '내용10', 2, now());
+insert into board_tb(title, content, user_id, created_at) values ('title11', '내용11', 2, now());
 
 insert into reply_tb(comment, board_id, user_id, created_at) values('댓글1', 1, 1, now());
 insert into reply_tb(comment, board_id, user_id, created_at) values('댓글2', 4, 1, now());

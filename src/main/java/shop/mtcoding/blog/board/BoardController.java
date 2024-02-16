@@ -118,24 +118,50 @@ public class BoardController {
 
     //localhost:8080?page=1 -> page 값이 1
     //localhost:8080 -> page 값이 0
-    @GetMapping({"/", "/board"})
-    public String index(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+    @GetMapping("/")
+    public String index(
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "") String keyword) {
 
-        List<Board> boardList = boardRepostiory.findAll(page);
+        // isEmpty -> null, 공백
+        // isBlank -> null, 공백, 화이트 스페이스
 
-        // 전체 페이지 개수
-        int count =boardRepostiory.count().intValue();
-        // if 페이지 개수가 6 - > 2page
-        // if 페이지 개수가 7 - > 3page
-        // int allPageCount = count / 3;
-        int namerge = count % 3 == 0 ? 0 : 1;
-        int allPageCount = count / 3 + namerge;
+        if(keyword.isBlank()){
+            List<Board> boardList = boardRepostiory.findAll(page);
+            // 전체 페이지 개수
+            int count = boardRepostiory.count().intValue();
+            // 5 -> 2page
+            // 6 -> 2page
+            // 7 -> 3page
+            // 8 -> 3page
+            int namerge = count % 3 == 0 ? 0 : 1;
+            int allPageCount = count / 3 + namerge;
 
-        request.setAttribute("boardList", boardList);
-        request.setAttribute("first", page==0);
-        request.setAttribute("last", allPageCount == page+1);
-        request.setAttribute("prev", page-1);
-        request.setAttribute("next", page+1);
+            request.setAttribute("boardList", boardList);
+            request.setAttribute("first", page == 0);
+            request.setAttribute("last", allPageCount == page + 1);
+            request.setAttribute("prev", page - 1);
+            request.setAttribute("next", page + 1);
+            request.setAttribute("keyword", "");
+        }else{
+            List<Board> boardList = boardRepostiory.findAll(page, keyword);
+            // 전체 페이지 개수
+            int count = boardRepostiory.count(keyword).intValue();
+            // 5 -> 2page
+            // 6 -> 2page
+            // 7 -> 3page
+            // 8 -> 3page
+            int namerge = count % 3 == 0 ? 0 : 1;
+            int allPageCount = count / 3 + namerge;
+
+            request.setAttribute("boardList", boardList);
+            request.setAttribute("first", page == 0);
+            request.setAttribute("last", allPageCount == page + 1);
+            request.setAttribute("prev", page - 1);
+            request.setAttribute("next", page + 1);
+            request.setAttribute("keyword", keyword);
+        }
 
         return "index";
     }

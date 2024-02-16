@@ -13,10 +13,25 @@ import java.util.List;
 public class BoardRepostiory {
     public final EntityManager em;
 
+    public Long count(String keyword){
+        Query query = em.createNativeQuery("select count(*) from board_tb where title like ?");
+        query.setParameter(1, "%"+keyword+"%");
+        return (Long) query.getSingleResult();
+    }
+
+
     public Long count(){
         Query query = em.createNativeQuery("select count(*) from board_tb");
         return (Long) query.getSingleResult();
     }
+
+    public List<Board> findAll(Integer page, String keyword){
+        Query query = em.createNativeQuery("select * from board_tb where title like ? order by id desc limit ?, 3", Board.class); // limit = (start 번호, 페이징 수)
+        query.setParameter(1, "%"+keyword+"%");
+        query.setParameter(2, page*3);
+        return query.getResultList();
+    }
+
 
     public List<Board> findAll(Integer page){
        Query query = em.createNativeQuery("select * from board_tb order by id desc limit ?, 3", Board.class); // limit = (start 번호, 페이징 수)
