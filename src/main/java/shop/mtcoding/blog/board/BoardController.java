@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import shop.mtcoding.blog.reply.ReplyRepostiory;
 import shop.mtcoding.blog.user.User;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class BoardController {
 
     private final HttpSession session;
     private final BoardRepostiory boardRepostiory;
+    private final ReplyRepostiory replyRepostiory;
 
     // title=제목1&content=내용1
 
@@ -153,7 +155,10 @@ public class BoardController {
 
         boardDTO.isBoardOwner(sessionUser);
 
+        List<BoardResponse.ReplyDTO> replyDTOList = replyRepostiory.findByBoardId(id);
+
         request.setAttribute("board", boardDTO);
+        request.setAttribute("replyList", replyDTOList);
 
         return "board/detail";
     }
