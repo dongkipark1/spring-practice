@@ -28,12 +28,19 @@ public class BoardResponse {
         private Integer userId; // 댓글 쓴 사람 = SESSION ID랑 비교
         private String comment;
         private String username;
+        private Boolean replyOwner; // 게시글 주인 여부 (세션값과 비교)
 
-        public ReplyDTO(Object[] ob) {
+        public ReplyDTO(Object[] ob, User sessionUser) {
             this.id = (Integer) ob[0];
             this.userId = (Integer) ob[1];;
             this.comment = (String) ob[2];;
             this.username = (String) ob[3];;
+
+            if (sessionUser == null){
+                replyOwner = false;
+            }else {
+                replyOwner = sessionUser.getId() == userId;
+            }
 
         }
     }

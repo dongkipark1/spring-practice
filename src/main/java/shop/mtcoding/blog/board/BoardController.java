@@ -155,7 +155,7 @@ public class BoardController {
 
         boardDTO.isBoardOwner(sessionUser);
 
-        List<BoardResponse.ReplyDTO> replyDTOList = replyRepostiory.findByBoardId(id);
+        List<BoardResponse.ReplyDTO> replyDTOList = replyRepostiory.findByBoardId(id, sessionUser);
 
         request.setAttribute("board", boardDTO);
         request.setAttribute("replyList", replyDTOList);
