@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import shop.mtcoding.blog.user.User;
 
@@ -14,6 +15,30 @@ public class ReplyController {
 
     private final HttpSession session;
     private final ReplyRepostiory replyRepostiory;
+
+    @PostMapping("/reply/{id}/delete")
+    private String delete(@PathVariable int id){
+        // 인증 체크
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return "redirect:/loginForm";
+        }
+        //권한 체크
+
+        Reply reply = replyRepostiory.findById(id);
+
+        // 댓글이 없거나, 댓글 주인이 아니거나, 댓글 주인이거나
+        if (reply == null){
+            return "error/404";
+        }
+        if (reply.getUserId() != sessionUser.getId()){
+            return "error/403";
+        }
+
+        replyRepostiory.deleteById(id);
+
+        return "redirect:/board/" + reply.getBoardId();
+    }
 
     @PostMapping("/reply/save")
     public String write(ReplyRequest.WriteDTO requestDTO) {

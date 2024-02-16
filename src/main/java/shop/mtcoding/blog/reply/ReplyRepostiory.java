@@ -38,4 +38,26 @@ public class ReplyRepostiory {
 
         query.executeUpdate();
     }
+
+    @Transactional
+    public void deleteById(int id) {
+        String q = "delete from reply_tb where id = ?";
+        Query query = em.createNativeQuery(q);
+        query.setParameter(1, id);
+
+        query.executeUpdate();
+    }
+
+    public Reply findById(int id){
+        String q = "select * from reply_tb where id = ?";
+        Query query = em.createNativeQuery(q, Reply.class);
+        query.setParameter(1, id);
+
+        // try ~ catch = ctrl + alt + t
+        try {
+            return (Reply) query.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
