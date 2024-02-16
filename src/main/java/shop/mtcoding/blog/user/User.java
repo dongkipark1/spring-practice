@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id // PK 설정
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT 전략
-    private int id;
+    private Integer id;
     private String username;
     private String password;
     private String email;

@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 public class Board {
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
-    private int id;
+    private Integer id;
 
     @Column(length = 30) // 30자 제한
     private String title;
     private String content;
 
-    private int userId; // 테이블 만들어 질 때 user_id
+    private Integer userId; // 테이블 만들어 질 때 user_id
     private LocalDateTime createdAt;
 }
