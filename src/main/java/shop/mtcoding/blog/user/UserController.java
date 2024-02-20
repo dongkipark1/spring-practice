@@ -3,6 +3,7 @@ package shop.mtcoding.blog.user;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,18 +43,25 @@ public class UserController {
         System.out.println(requestDTO); // toString -> @Data
 
         if (requestDTO.getUsername().length() < 3){
-            return "error/400"; // viewResolver 설정이 되어 있음.
+            throw new RuntimeException("유저네임 길이가 너무 짧아요");
         }
 
-        User user = userRepository.findByUsernameAndPassword(requestDTO);
-        session.setAttribute("sessionUser", user); //라커에 담는다 (stateful)
+        User user = userRepository.findByUsername(requestDTO.getUsername());
 
-        return "redirect:/"; // 컨트롤러가 존재하면 무조건 redirect다 반드시 외울 것!!!
+        if (!BCrypt.checkpw(requestDTO.getPassword(), user.getPassword())){ // 패스워드 검증을 실패했다면
+                throw new RuntimeException("패스워드가 틀렸습니다");
+        }
+        session.setAttribute("sessionUser", user);
+        return "redirect:/";
     }
 
     @PostMapping("/join")
     public String join(UserRequest.joinDTO requestDTO){ //@ResponseBody 메시지 자체가 리턴된다. ViewResolver 동작 안함
         System.out.println(requestDTO);
+
+        String rawPassword = requestDTO.getPassword();
+        String encPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+        requestDTO.setPassword(encPassword);
 
         //ssar을 조회해보고 있으면, 없으면
 
