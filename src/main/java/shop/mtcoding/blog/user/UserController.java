@@ -46,17 +46,13 @@ public class UserController {
         }
 
         User user = userRepository.findByUsernameAndPassword(requestDTO);
+        session.setAttribute("sessionUser", user); //라커에 담는다 (stateful)
 
-        if (user == null) { // 조회안됨
-            return "error/401";
-        }else { //조회 됨 (인증완료)
-            session.setAttribute("sessionUser", user); //라커에 담는다 (stateful)
-        }
         return "redirect:/"; // 컨트롤러가 존재하면 무조건 redirect다 반드시 외울 것!!!
     }
 
     @PostMapping("/join")
-    public @ResponseBody String join(UserRequest.joinDTO requestDTO){ //@ResponseBody 메시지 자체가 리턴된다. ViewResolver 동작 안함
+    public String join(UserRequest.joinDTO requestDTO){ //@ResponseBody 메시지 자체가 리턴된다. ViewResolver 동작 안함
         System.out.println(requestDTO);
 
         //ssar을 조회해보고 있으면, 없으면
@@ -64,9 +60,9 @@ public class UserController {
         try {
             userRepository.save(requestDTO); // 모델에 위임하기
         } catch (Exception e) {
-            return Script.back("아이디가 중복되었습니다.");
+            throw new RuntimeException("아이디가 중복되었습니다.");
         }
-        return Script.href("/loginForm");
+        return "redirect:/loginForm";
     }
 
     @GetMapping("/joinForm")
