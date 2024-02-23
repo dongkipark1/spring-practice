@@ -19,7 +19,7 @@
     <div class="card">
         <div class="card-header"><b>회원가입을 해주세요</b></div>
         <div class="card-body">
-            <form action="/join" method="post" enctype="application/x-www-form-urlencoded">
+            <form action="/join" method="post" onsubmit="return valid()" enctype="application/x-www-form-urlencoded">
                 <div class="mb-3">
                     <input id="username" type="text" class="form-control" placeholder="Enter username" name="username">
                     <button type="button" class="btn btn-danger" onclick="userSameCheck()">중복확인</button>
@@ -38,6 +38,13 @@
 
 <script>
     let isCheck = false;
+
+    function valid(){
+        if(isSameCheck == false){
+            alert("아이디 중복체크를 해야 합니다");
+        }
+        return isCheck;
+    }
 
     function userSameCheck() {
         let username = $("#username").val();
