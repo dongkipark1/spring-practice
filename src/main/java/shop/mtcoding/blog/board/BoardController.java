@@ -189,22 +189,16 @@ public class BoardController {
     // 나머지는 다 queryString
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id, HttpServletRequest request) {
-        // 권한
-        User sessionUser = (User) session.getAttribute("sessionUser"); // 열려라 참깨
-        // 모델 진입
+        User sessionUser = (User) session.getAttribute("sessionUser");
         BoardResponse.DetailDTO boardDTO = boardRepostiory.findByIdWithUser(id);
-
         boardDTO.isBoardOwner(sessionUser);
 
         List<BoardResponse.ReplyDTO> replyDTOList = replyRepostiory.findByBoardId(id, sessionUser);
-
         request.setAttribute("board", boardDTO);
         request.setAttribute("replyList", replyDTOList);
 
         LoveResponse.DetailDTO loveDetailDTO = loveRepository.findLove(id, sessionUser.getId());
-
         request.setAttribute("love", loveDetailDTO);
-
         // fas fa-heart text-danger
         // far fa-heart
         // request.setAttribute("css", "far fa-heart");
