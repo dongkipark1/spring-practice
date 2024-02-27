@@ -21,4 +21,4 @@ insert into reply_tb(comment, board_id, user_id, created_at) values('댓글4', 4
 insert into love_tb(board_id, user_id, created_at) values(9, 1, now());
 insert into love_tb(board_id, user_id, created_at) values(9, 2, now());
 insert into love_tb(board_id, user_id, created_at) values(8, 1, now());
-insert into love_tb(board_id, user_id, created_at) values(10, 1, now());
+

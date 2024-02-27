@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog.love.LoveRepository;
 import shop.mtcoding.blog.love.LoveResponse;
-import shop.mtcoding.blog.reply.ReplyRepostiory;
+import shop.mtcoding.blog.reply.ReplyRepository;
 import shop.mtcoding.blog.user.User;
 
 import java.util.List;
@@ -17,8 +17,8 @@ import java.util.List;
 public class BoardController {
 
     private final HttpSession session;
-    private final BoardRepostiory boardRepostiory;
-    private final ReplyRepostiory replyRepostiory;
+    private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
     private final LoveRepository loveRepository;
 
     // title=제목1&content=내용1
@@ -35,14 +35,14 @@ public class BoardController {
         // 조금이라도 다르면 패턴화 시켜야 함
 
         // 2. 권한 체크(부가 로직)
-        Board board = boardRepostiory.findById(id);
+        Board board = boardRepository.findById(id);
 
         if (board.getUserId() != sessionUser.getId()) {
             return "error/403";
         }
         // 3. 핵심 로직 - 모델 위임
         // update board_tb set title = ? , content = ? where id = ?; 데이터 3건을 넘겨야 함 DTO, id
-        boardRepostiory.update(requestDTO, id);
+        boardRepository.update(requestDTO, id);
 
         return "redirect:/board/" + id;
 
@@ -60,7 +60,7 @@ public class BoardController {
 
         // 모델 위임 (id로 board를 조회 핵심로직)
         // 권한 체크 (로그인한 id와 게시글을 쓴 user를 비교)
-        Board board = boardRepostiory.findById(id);
+        Board board = boardRepository.findById(id);
 
         if (board.getUserId() != sessionUser.getId()) {
             return "error/403";
@@ -82,14 +82,14 @@ public class BoardController {
         }
 
         // 2. 권한 없으면 나가세요
-        Board board = boardRepostiory.findById(id);
+        Board board = boardRepository.findById(id);
         if (board.getUserId() != sessionUser.getId()) {
             request.setAttribute("status", 403);
             request.setAttribute("msg", "게시글 삭제 권한이 없습니다");
             return "error/40x";
         }
 
-        boardRepostiory.deleteById(id);
+        boardRepository.deleteById(id);
 
         return "redirect:/";
 
@@ -114,7 +114,7 @@ public class BoardController {
 
         // 3. 모델 위임
         // insert into board_tb(title, content, user_id, created_at) values(?,?,?,now()); title과 content를 request userId는 제이세션아이디의 user 객체에서 가지고 오면된
-        boardRepostiory.save(requestDTO, sessionUser.getId());
+        boardRepository.save(requestDTO, sessionUser.getId());
 
         return "redirect:/";
     }
@@ -131,9 +131,9 @@ public class BoardController {
         // isBlank -> null, 공백, 화이트 스페이스
 
         if(keyword.isBlank()){
-            List<Board> boardList = boardRepostiory.findAll(page);
+            List<Board> boardList = boardRepository.findAll(page);
             // 전체 페이지 개수
-            int count = boardRepostiory.count().intValue();
+            int count = boardRepository.count().intValue();
             // 5 -> 2page
             // 6 -> 2page
             // 7 -> 3page
@@ -148,9 +148,9 @@ public class BoardController {
             request.setAttribute("next", page + 1);
             request.setAttribute("keyword", "");
         }else{
-            List<Board> boardList = boardRepostiory.findAll(page, keyword);
+            List<Board> boardList = boardRepository.findAll(page, keyword);
             // 전체 페이지 개수
-            int count = boardRepostiory.count(keyword).intValue();
+            int count = boardRepository.count(keyword).intValue();
             // 5 -> 2page
             // 6 -> 2page
             // 7 -> 3page
@@ -190,15 +190,21 @@ public class BoardController {
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        BoardResponse.DetailDTO boardDTO = boardRepostiory.findByIdWithUser(id);
+        BoardResponse.DetailDTO boardDTO = boardRepository.findByIdWithUser(id);
         boardDTO.isBoardOwner(sessionUser);
 
-        List<BoardResponse.ReplyDTO> replyDTOList = replyRepostiory.findByBoardId(id, sessionUser);
+        List<BoardResponse.ReplyDTO> replyDTOList = replyRepository.findByBoardId(id, sessionUser);
         request.setAttribute("board", boardDTO);
         request.setAttribute("replyList", replyDTOList);
 
-        LoveResponse.DetailDTO loveDetailDTO = loveRepository.findLove(id, sessionUser.getId());
-        request.setAttribute("love", loveDetailDTO);
+        if(sessionUser == null){
+            LoveResponse.DetailDTO loveDetailDTO = loveRepository.findLove(id);
+            request.setAttribute("love", loveDetailDTO);
+        }else{
+            LoveResponse.DetailDTO loveDetailDTO = loveRepository.findLove(id, sessionUser.getId());
+            request.setAttribute("love", loveDetailDTO);
+        }
+
         // fas fa-heart text-danger
         // far fa-heart
         // request.setAttribute("css", "far fa-heart");

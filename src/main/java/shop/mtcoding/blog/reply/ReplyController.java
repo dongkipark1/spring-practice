@@ -1,6 +1,5 @@
 package shop.mtcoding.blog.reply;
 
-import jakarta.persistence.Column;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,7 @@ import shop.mtcoding.blog.user.User;
 public class ReplyController {
 
     private final HttpSession session;
-    private final ReplyRepostiory replyRepostiory;
+    private final ReplyRepository replyRepository;
 
     @PostMapping("/reply/{id}/delete")
     private String delete(@PathVariable int id){
@@ -25,7 +24,7 @@ public class ReplyController {
         }
         //권한 체크
 
-        Reply reply = replyRepostiory.findById(id);
+        Reply reply = replyRepository.findById(id);
 
         // 댓글이 없거나, 댓글 주인이 아니거나, 댓글 주인이거나
         if (reply == null){
@@ -35,7 +34,7 @@ public class ReplyController {
             return "error/403";
         }
 
-        replyRepostiory.deleteById(id);
+        replyRepository.deleteById(id);
 
         return "redirect:/board/" + reply.getBoardId();
     }
@@ -51,7 +50,7 @@ public class ReplyController {
 
 
         // 핵심 코드
-        replyRepostiory.save(requestDTO, sessionUser.getId());
+        replyRepository.save(requestDTO, sessionUser.getId());
 
         return "redirect:/board/" +requestDTO.getBoardId();
     }

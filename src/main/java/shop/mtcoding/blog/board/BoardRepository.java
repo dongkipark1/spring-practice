@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class BoardRepostiory {
+public class BoardRepository {
     public final EntityManager em;
 
     public Long count(String keyword){

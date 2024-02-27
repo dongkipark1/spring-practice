@@ -5,8 +5,6 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import shop.mtcoding.blog.board.Board;
-import shop.mtcoding.blog.board.BoardRequest;
 import shop.mtcoding.blog.board.BoardResponse;
 import shop.mtcoding.blog.user.User;
 
@@ -14,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class ReplyRepostiory {
+public class ReplyRepository {
     public final EntityManager em;
 
     public List<BoardResponse.ReplyDTO> findByBoardId(int boardId , User sessionUser){
